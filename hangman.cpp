@@ -1,15 +1,11 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string.h>
+#include <fstream>
+#include <stdlib.h>
+#include <cstdlib>
+#include <time.h>
+#include <vector>
 using namespace std;
-
-void defaultSketch()
-{
-     cout << "\t\t\t+-------+" << endl
-          << "\t\t\t|\t|" << endl
-          << "\t\t\t\t|" << endl
-          << "\t\t\t\t|" << endl
-          << "\t\t\t\t|" << endl
-          << "\t\t\t**********" << endl;
-}
 
 void welcome()
 {
@@ -27,6 +23,16 @@ void welcome()
 
      system("PAUSE");
      system("CLS");
+}
+
+void defaultSketch()
+{
+     cout << "\t\t\t+-------+" << endl
+          << "\t\t\t|\t|" << endl
+          << "\t\t\t\t|" << endl
+          << "\t\t\t\t|" << endl
+          << "\t\t\t\t|" << endl
+          << "\t\t\t**********" << endl;
 }
 
 void firstError()
