@@ -349,6 +349,7 @@ int main()
           else
                youWon();
 
+          cout << endl;
           cout << "Do you want to play again? (y/n) ";
           cin >> playAgain;
 
