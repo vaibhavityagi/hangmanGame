@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 void welcome()
@@ -213,116 +214,149 @@ void youWon()
 
 int main()
 {
+     char playAgain;
+
      welcome();
 
-     int choice;
-     cout << "\t\t\tChoose the level" << endl
-          << endl;
-     cout << "\t\t\t1. Easy" << endl
-          << "\t\t\t2. Medium" << endl
-          << "\t\t\t3. Hard" << endl;
-     cin >> choice;
-
-     system("CLS");
-
-     string word = randomWord(choice);
-     vector<char> guess;
-     vector<char> incorrectLetters;
-
-     cout << "The word to be guessed has " << word.length() << " letters" << endl;
-     for (int i = 0; i < word.length(); i++)
+     do
      {
-          guess.push_back('_');
-          cout << "_ ";
-     }
-
-     cout << endl
-          << endl;
-
-     defaultSketch();
-
-     int tryC = 0;
-     int win = 0;
-
-     while (tryC != 6 && win < word.length())
-     {
-          char letter;
-          cout << "Enter the letter: ";
-          cin >> letter;
-
-          int flag = 0;
-
-          // iterating over the word letter by letter
-          for (int i = 0; i < word.length(); i++)
-          {
-               if (word[i] == letter)
-               {
-                    guess[i] = letter;
-                    win++;
-               }
-               else
-                    flag++;
-          }
-
-          // the letter is not present in the word
-          if (flag == word.length())
-          {
-               tryC++;
-               incorrectLetters.push_back(letter);
-          }
-
-          // hint if given when there is only one try left
-          int once = 0;
-          if (tryC == 4 && once == 0)
-          {
-               system("CLS");
-
-               char h;
-               cout << "Do you want a hint? (Y/N) ";
-               cin >> h;
-               cout << endl;
-               if (h == 'Y' || h == 'y')
-               {
-                    cout << hint(word, guess) << " is one of the letters" << endl;
-                    tryC++;
-               }
-               else
-               {
-                    cout << "You choose to not opt for a hint" << endl;
-                    once++;
-               }
-               cout << endl;
-               system("PAUSE");
-          }
+          int choice;
+          cout << "\t\t\tChoose the level" << endl
+               << endl;
+          cout << "\t\t\t1. Easy" << endl
+               << "\t\t\t2. Medium" << endl
+               << "\t\t\t3. Hard" << endl;
+          cin >> choice;
 
           system("CLS");
 
-          cout << "Tries left: " << 6 - tryC << endl;
+          string word = randomWord(choice);
+          vector<char> guess;
+          vector<char> incorrectLetters;
 
-          cout << "Incorrect letters: ";
-          for (auto l : incorrectLetters)
-               cout << l << " ";
-
-          cout << endl;
-
-          // printing the word being guessed
-          for (auto l : guess)
-               cout << l << " ";
+          cout << "The word to be guessed has " << word.length() << " letters" << endl;
+          for (int i = 0; i < word.length(); i++)
+          {
+               guess.push_back('_');
+               cout << "_ ";
+          }
 
           cout << endl
                << endl;
 
-          drawMan(tryC);
+          defaultSketch();
 
-          cout << endl;
-     }
+          int tryC = 0;
+          int win = 0;
 
-     if (tryC >= 6)
-     {
-          gameOver(word);
-     }
-     else
-          youWon();
+          while (tryC != 6 && win < word.length())
+          {
+               char letter;
+               cout << "Enter the letter: ";
+               cin >> letter;
+
+               // to check that the letter entered hasn't already been entered before
+               try
+               {
+                    vector<char>::iterator itInL;
+                    vector<char>::iterator itCL;
+                    itInL = find(incorrectLetters.begin(), incorrectLetters.end(), letter);
+                    itCL = find(guess.begin(), guess.end(), letter);
+                    // letter entered has already been entered before
+                    if (itInL != incorrectLetters.end() || itCL != guess.end())
+                    {
+                         throw(letter);
+                    }
+               }
+               catch (char e)
+               {
+                    cout << "Letter has already been guessed before, enter a different letter" << endl;
+                    cout << "Enter the letter: ";
+                    cin >> letter;
+               }
+
+               int flag = 0;
+
+               // iterating over the word letter by letter
+               for (int i = 0; i < word.length(); i++)
+               {
+                    if (word[i] == letter)
+                    {
+                         guess[i] = letter;
+                         win++;
+                    }
+                    else
+                         flag++;
+               }
+
+               // the letter is not present in the word
+               if (flag == word.length())
+               {
+                    tryC++;
+                    incorrectLetters.push_back(letter);
+               }
+
+               // hint if given when there is only one try left
+               int once = 0;
+               if (tryC == 4 && once == 0)
+               {
+                    system("CLS");
+
+                    char h;
+                    cout << "Do you want a hint? (Y/N) ";
+                    cin >> h;
+                    cout << endl;
+                    if (h == 'Y' || h == 'y')
+                    {
+                         cout << hint(word, guess) << " is one of the letters" << endl;
+                         tryC++;
+                    }
+                    else
+                    {
+                         cout << "You choose to not opt for a hint" << endl;
+                         once++;
+                    }
+                    cout << endl;
+                    system("PAUSE");
+               }
+
+               system("CLS");
+
+               cout << "Tries left: " << 6 - tryC << endl;
+
+               cout << "Incorrect letters: ";
+               for (auto l : incorrectLetters)
+                    cout << l << " ";
+
+               cout << endl;
+
+               // printing the word being guessed
+               for (auto l : guess)
+                    cout << l << " ";
+
+               cout << endl
+                    << endl;
+
+               drawMan(tryC);
+
+               cout << endl;
+          }
+
+          if (tryC >= 6)
+          {
+               gameOver(word);
+          }
+          else
+               youWon();
+
+          cout << "Do you want to play again? (y/n) ";
+          cin >> playAgain;
+
+          system("CLS");
+
+     } while (playAgain == 'y');
+
+     cout << "Thank you for playing the game!";
 
      return 0;
 }
