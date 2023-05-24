@@ -167,7 +167,6 @@ string randomWord(int choice)
 
 char hint(string w, vector<char> &guess)
 {
-     // cout << "inside\n";
      int index = 0;
      for (int i = 0; i < guess.size(); i++)
      {
